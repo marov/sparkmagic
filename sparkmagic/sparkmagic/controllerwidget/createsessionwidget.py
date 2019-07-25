@@ -22,7 +22,7 @@ class CreateSessionWidget(AbstractMenuWidget):
         )
         self.lang_widget = self.ipywidget_factory.get_toggle_buttons(
             description='Language:',
-            options=[LANG_SCALA, LANG_PYTHON],
+            options=[LANG_PYTHON, LANG_SCALA],
         )
         self.properties = self.ipywidget_factory.get_text(
             description='Properties:',

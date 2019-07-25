@@ -10,7 +10,7 @@ from hdijupyterutils.configuration import override as _override
 from hdijupyterutils.configuration import override_all as _override_all
 from hdijupyterutils.configuration import with_override
 
-from .constants import HOME_PATH, CONFIG_FILE, MAGICS_LOGGER_NAME, LIVY_KIND_PARAM, \
+from .constants import HOME_PATH, CONFIG_FILE, MAGICS_LOGGER_NAME, LIVY_KIND_PARAM, LIVY_SPARK_CONF_PARAM, \
     LANG_SCALA, LANG_PYTHON, LANG_R, \
     SESSION_KIND_SPARKR, SESSION_KIND_SPARK, SESSION_KIND_PYSPARK, CONFIGURABLE_RETRY
 from sparkmagic.livyclientlib.exceptions import BadUserConfigurationException
@@ -43,6 +43,15 @@ def get_livy_kind(language):
     else:
         raise BadUserConfigurationException("Cannot get session kind for {}.".format(language))
 
+def get_livy_spark_conf():
+    conf = {}
+    conf["spark.submit.deployMode"] = "cluster"
+    print(sys.executable)
+    if '/mnt/efs' in sys.executable:
+        python_executable = sys.executable.replace('/mnt/efs', '/mnt/efs/efs-pvc-cb35fe58-a9c2-11e9-8bd9-0ad499f08740')
+        conf["spark.yarn.appMasterEnv.PYSPARK_PYTHON"] = python_executable
+        conf["spark.yarn.executorEnv.PYSPARK_PYTHON"] = python_executable
+    return conf
 
 def get_auth_value(username, password):
     if username == '' and password == '':
@@ -57,6 +66,8 @@ def get_session_properties(language):
     properties = copy.deepcopy(session_configs())
     properties.update(default_properties)
     properties[LIVY_KIND_PARAM] = get_livy_kind(language)
+    properties[LIVY_SPARK_CONF_PARAM] = get_livy_spark_conf()
+    print(properties)
     return properties
 
 def default_sesion_configs():

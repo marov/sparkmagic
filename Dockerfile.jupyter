@@ -7,16 +7,25 @@ ARG dev_mode=true
 # Otherwise, just install from pip.
 COPY hdijupyterutils hdijupyterutils/
 COPY autovizwidget autovizwidget/
-COPY sparkmagic sparkmagic/
+COPY sparkmagic /opt/sparkmagic/
+
+RUN sudo apt-get update && sudo apt-get install -y \
+    wget \
+    curl \
+    build-essential \
+    git \
+    vim \
+    less
 
 RUN pip install jupyterhub-samlauthenticator;
+
+RUN pip install jupyterlab;
 
 RUN if [ "$dev_mode" = "true" ]; then \
       cd hdijupyterutils && pip install . && cd ../ && \
       cd autovizwidget && pip install . && cd ../ && \
-      cd sparkmagic && pip install . && cd ../ ; \
+      cd /opt/sparkmagic && pip install . && cd ../ ; \
     else pip install sparkmagic ; fi
 
 RUN jupyter-kernelspec uninstall -fy pyspark3kernel
-RUN rm -rf hdijupyterutils/ autovizwidget/ sparkmagic/
-
+RUN rm -rf hdijupyterutils/ autovizwidget/
