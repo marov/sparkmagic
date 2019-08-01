@@ -3,7 +3,7 @@
 import json
 
 import sparkmagic.utils.configuration as conf
-from sparkmagic.utils.constants import LANG_SCALA, LANG_PYTHON
+from sparkmagic.utils.constants import LANG_SCALA, LANG_PYTHON, LANG_R
 from sparkmagic.controllerwidget.abstractmenuwidget import AbstractMenuWidget
 
 
@@ -22,7 +22,7 @@ class CreateSessionWidget(AbstractMenuWidget):
         )
         self.lang_widget = self.ipywidget_factory.get_toggle_buttons(
             description='Language:',
-            options=[LANG_PYTHON, LANG_SCALA],
+            options=[LANG_PYTHON, LANG_SCALA, LANG_R], max_width="100%"
         )
         self.properties = self.ipywidget_factory.get_text(
             description='Properties:',
@@ -32,12 +32,16 @@ class CreateSessionWidget(AbstractMenuWidget):
             description='Create Session'
         )
 
-        self.children = [self.ipywidget_factory.get_html(value="<br/>", width="600px"), self.endpoints_dropdown_widget,
-                         self.session_widget, self.lang_widget, self.properties,
-                         self.ipywidget_factory.get_html(value="<br/>", width="600px"), self.submit_widget]
+        self.children = [self.ipywidget_factory.get_hbox(children=
+                        [self.ipywidget_factory.get_vbox(children=[self.endpoints_dropdown_widget, self.session_widget], max_width="100%"),
+                         self.ipywidget_factory.get_vbox(children=[self.lang_widget], max_width="100%"),
+                         self.ipywidget_factory.get_vbox(children=[self.properties, self.submit_widget], max_width="100%")]
+                        )]
 
         for child in self.children:
             child.parent_widget = self
+
+        self.submit_widget.parent_widget = self
 
     def run(self):
         try:
