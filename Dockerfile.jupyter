@@ -2,12 +2,15 @@ FROM docker.intuit.com/data/mlplatform/sbsegml/service/emr/jupyter-notebook:5.7.
 
 ARG dev_mode=true
 
+ENV DEBIAN_FRONTEND=noninteractive
 
 # Install sparkmagic - if DEV_MODE is set, use the one in the host directory.
 # Otherwise, just install from pip.
 COPY hdijupyterutils hdijupyterutils/
 COPY autovizwidget autovizwidget/
 COPY sparkmagic /opt/sparkmagic/
+
+RUN sudo ln -sf /usr/share/zoneinfo/America/Los_Angeles /etc/localtime
 
 RUN sudo apt-get update && sudo apt-get install -y \
     wget \
