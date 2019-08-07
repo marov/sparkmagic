@@ -16,6 +16,7 @@ RUN sudo apt-get update && sudo apt-get install -y \
     wget \
     curl \
     build-essential \
+    groff \
     git \
     vim \
     awscli \
@@ -33,3 +34,4 @@ RUN if [ "$dev_mode" = "true" ]; then \
 
 RUN jupyter-kernelspec uninstall -fy pyspark3kernel
 RUN rm -rf hdijupyterutils/ autovizwidget/
+RUN mkdir /var/log/jupyter
