@@ -46,11 +46,11 @@ def get_livy_kind(language):
 def get_livy_spark_conf():
     conf = {}
     conf["spark.submit.deployMode"] = "cluster"
-    print(sys.executable)
     if '/mnt/efs' in sys.executable:
         python_executable = sys.executable.replace('/mnt/efs', '/mnt/efs/efs-pvc-cb35fe58-a9c2-11e9-8bd9-0ad499f08740')
         conf["spark.yarn.appMasterEnv.PYSPARK_PYTHON"] = python_executable
         conf["spark.yarn.executorEnv.PYSPARK_PYTHON"] = python_executable
+    print("Python executable: %s" %sys.executable)
     return conf
 
 def get_auth_value(username, password):
@@ -66,7 +66,7 @@ def get_session_properties(language):
     properties = copy.deepcopy(session_configs())
     properties.update(default_properties)
     properties[LIVY_KIND_PARAM] = get_livy_kind(language)
-    properties[LIVY_SPARK_CONF_PARAM] = get_livy_spark_conf()
+    properties[LIVY_SPARK_CONF_PARAM].update(get_livy_spark_conf())
     print(properties)
     return properties
 
