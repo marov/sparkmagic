@@ -66,8 +66,10 @@ def get_session_properties(language):
     properties = copy.deepcopy(session_configs())
     properties.update(default_properties)
     properties[LIVY_KIND_PARAM] = get_livy_kind(language)
-    properties[LIVY_SPARK_CONF_PARAM].update(get_livy_spark_conf())
-    print(properties)
+    livy_conf = get_livy_spark_conf()
+    if LIVY_SPARK_CONF_PARAM not in properties:
+        properties[LIVY_SPARK_CONF_PARAM] = {}
+    properties[LIVY_SPARK_CONF_PARAM].update(livy_conf)
     return properties
 
 def default_sesion_configs():
