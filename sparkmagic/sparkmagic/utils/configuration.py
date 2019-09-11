@@ -45,7 +45,7 @@ def get_livy_kind(language):
 
 def get_livy_spark_conf():
     conf = {}
-    conf["spark.submit.deployMode"] = "cluster"
+    # conf["spark.submit.deployMode"] = "cluster"
     if '/mnt/efs' in sys.executable:
         python_executable = sys.executable.replace('/mnt/efs', '/mnt/efs/efs-pvc-cb35fe58-a9c2-11e9-8bd9-0ad499f08740')
         conf["spark.yarn.appMasterEnv.PYSPARK_PYTHON"] = python_executable
